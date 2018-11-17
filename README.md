@@ -1,4 +1,4 @@
-README.md
+
 
 ## Nemo
 
@@ -10,4 +10,4 @@ so many things
 
 - estratégia e comportamento de combate
 - testar sensores
-- organizar módulos e funções em pastas com headers etc
+- organizar módulos e funções em arquivos com headers etc

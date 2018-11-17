@@ -1,37 +1,52 @@
-/*
+#include "_config.h"
+
+#include "motors.h"
+#include "systemcontrol.h"
 
 
-//Motor A
-#define PWMA 6 //Speed control
-#define AIN1 10 //Direction
-#define AIN2 11 //Direction
 
-//Motor B
-#define PWMB 5 //Speed control
-#define BIN1 13 //Direction
-#define BIN2 12 //Direction
 
-#define STBY 2
-
-#define PIN_BUTTON 4 
-
-#define PIN_RED_RGB 8
-#define PIN_GREEN_RGB 3
-#define PIN_BLUE_RGB 9
 
 void setup() {
 
-  pinMode(8, OUTPUT);
-  pinMode(10, OUTPUT);
-  pinMode(11, OUTPUT);
-  pinMode(9, OUTPUT);
-  pinMode(3, OUTPUT);
-  pinMode(6, OUTPUT);
+
+  pinMode(PIN_BUTTON, INPUT);
+  pinMode(PIN_RED_RGB, OUTPUT);
+  pinMode(PIN_GREEN_RGB, OUTPUT);
+  pinMode(PIN_BLUE_RGB, OUTPUT);
+
+
+  SystemControl::init();
+  Motors::init();
+  
+
   Serial.begin(9600);
 }
 
 void loop(){
-        digitalWrite(AIN1, HIGH);
-        digitalWrite(AIN2, LOW);
-        analogWrite(PWMA, 120);
-}*/
+        
+        SystemControl::buttonStartStop(false);
+        while(digitalRead(4);)
+
+        controller.run();
+        Serial.println(SystemControl::bright_read);
+
+        if(SystemControl::bright_read > 300){ //possibly && !pushing ?
+
+          //you're in the dohyo! do something!
+          Serial.println("preto");
+          Motors::move(1, 120, 1);
+          Motors::move(2, 120, 1);
+          //Behaviour::AttackMode(); //when it's done...
+
+        }
+        else{
+          
+          //it's white, turn around!
+          Serial.println("branco!");
+          Motors::move(1, 120, 0);
+          Motors::move(2, 120, 0);
+          //Behaviour::RetreatMode(); //when it's done...
+        }
+
+}

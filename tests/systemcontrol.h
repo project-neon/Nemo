@@ -14,11 +14,13 @@ class SystemControl{
 public:
   static void init();
 
-  static void buttonStartStop(bool tipo);
+  static void buttonStartStop(int button_state);
 
   static int bright_read;
 
+  static int button_state;
 
+  static bool begun;
 
 };
 

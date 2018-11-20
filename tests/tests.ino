@@ -5,8 +5,6 @@
 
 
 
-
-
 void setup() {
 
 
@@ -24,11 +22,75 @@ void setup() {
 }
 
 void loop(){
-        
-        SystemControl::buttonStartStop(false);
-        while(digitalRead(4);)
 
-        controller.run();
+
+
+  
+      digitalWrite(PIN_RED_RGB, HIGH);
+      digitalWrite(PIN_GREEN_RGB, LOW);
+      digitalWrite(PIN_BLUE_RGB, LOW);
+
+
+      
+    
+
+
+
+      digitalWrite(STBY, HIGH);
+
+      digitalWrite(AIN1, HIGH);
+      digitalWrite(AIN2, LOW);
+      digitalWrite(PWMA, HIGH);
+      digitalWrite(BIN1, HIGH);
+      digitalWrite(BIN2, LOW);
+      digitalWrite(PWMB, HIGH);
+
+
+      delay(1000);
+
+    
+      Serial.println("hello estou debbugando");
+      digitalWrite(AIN1, HIGH);
+      digitalWrite(AIN2, LOW);
+      digitalWrite(PWMA, LOW);
+      digitalWrite(BIN1, HIGH);
+      digitalWrite(BIN2, LOW);
+      digitalWrite(PWMB, LOW);
+
+
+      delay(1000);
+
+
+
+      digitalWrite(AIN1, LOW);
+      digitalWrite(AIN2, HIGH);
+      digitalWrite(PWMA, HIGH);
+      digitalWrite(BIN1, HIGH);
+      digitalWrite(BIN2, LOW);
+      digitalWrite(PWMB, HIGH);
+
+        /*controller.run();
+        
+        Serial.println(SystemControl::button_state);
+
+        SystemControl::buttonStartStop(SystemControl::button_state);
+
+
+        Serial.println(SystemControl::begun);
+
+
+
+
+
+        /*SystemControl::buttonStartStop(SystemControl::button_state);
+
+        while(SystemControl::button_state == LOW){
+          Serial.println(SystemControl::button_state);
+          delay(2000);
+        }
+
+
+        
         Serial.println(SystemControl::bright_read);
 
         if(SystemControl::bright_read > 300){ //possibly && !pushing ?
@@ -47,6 +109,6 @@ void loop(){
           Motors::move(1, 120, 0);
           Motors::move(2, 120, 0);
           //Behaviour::RetreatMode(); //when it's done...
-        }
+        }*/
 
 }

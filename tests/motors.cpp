@@ -29,6 +29,7 @@ void Motors::move(int motor, int speed, int direction){
 //speed: 0 is off, and 255 is full speed
 //direction: 0 clockwise, 1 counter-clockwise
 
+  Serial.println("Ligou o torretoni");
   digitalWrite(STBY, HIGH); //disable standby
 
   bool inPin1 = LOW;

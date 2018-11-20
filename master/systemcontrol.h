@@ -15,10 +15,19 @@ class SystemControl{
 public:
   static void init();
 
-  static void buttonStartStop(bool tipo);
+  static bool buttonStartStop(bool button_press);
 
+  static int getColorSensors();
+
+  static int bright_read;
+
+  static int infraDistance;
+  
 };
+
+static int button_state;
 
 
 
 #endif  
+

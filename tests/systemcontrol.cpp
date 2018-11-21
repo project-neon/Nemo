@@ -1,4 +1,3 @@
-
 #include "systemcontrol.h"
 #include "_config.h"
 #include "motors.h"
@@ -6,75 +5,75 @@
 
 ThreadController controller;
 
-int SystemControl::bright_read;
-
-int SystemControl::button_state; 
-
-bool SystemControl::begun = false;
-
-
-
  
+
+int SystemControl::bright_read;
+int SystemControl::button_state;
+int SystemControl::infra_distance;
+
 void threadColorSensors_run();
-Thread threadColorSensors(threadColorSensors_run, 500);
-
-void threadButtonCheck_run();
-Thread threadButton(threadButtonCheck_run, 1000);
+Thread threadColorSensors(threadColorSensors_run, 100);
 
 
-void SystemControl::init(){
+void threadInfraSensor_run();
+Thread threadInfraSensor(threadInfraSensor_run, 1000);
 
-  Serial.begin(9600);
+
+bool SystemControl::buttonStartStop(bool button_press){
+  if (button_press){  
+    if (button_state == 0){
+      button_state++;
+      delay(500);
+      digitalWrite(PIN_GREEN_RGB, HIGH);
+      digitalWrite(PIN_RED_RGB, LOW);
+      digitalWrite(PIN_BLUE_RGB, LOW);
+      //COMEÇA PANCADA
+
+      return true;
+    }
+    else{
+    button_state = 0;
+      digitalWrite(PIN_RED_RGB, HIGH);
+      digitalWrite(PIN_BLUE_RGB, LOW);
+      digitalWrite(PIN_RED_RGB, LOW);
+
+      //later: desligar motores
+        
+      return false;
+    }
+  }
+  else {
+    if(button_state == 1)
+      return true;
+    else
+      return false;
+      Motors::stop();
+  }
+}
+
+void SystemControl::init() {
   delay(50);
 
   controller.add(&threadColorSensors);
-  controller.add(&threadButton);
-
+  controller.add(&threadInfraSensor);
 
 }
 
+
+void threadInfraSensor_run(){
+
+  SystemControl::infra_distance = analogRead(PIN_IR_SENSOR);
+
+}
 
 void threadColorSensors_run(){
+  
+ SystemControl::bright_read = analogRead(PIN_REFL_SENSOR1);
+} 
 
-      SystemControl::bright_read = analogRead(PIN_REFL_SENSOR);
+
+int SystemControl::getColorSensors(){
+
+  return analogRead(PIN_REFL_SENSOR1);
+        
 }
-
-
-void threadButtonCheck_run(){
-
-  SystemControl::button_state = digitalRead(PIN_BUTTON);
-
-}
-
-
-void SystemControl::buttonStartStop(int butt_state){
-    if (butt_state == LOW && begun == false){ //due to pull-down
-      //standby
-      digitalWrite(8, HIGH);
-      digitalWrite(9, LOW);
-      digitalWrite(3, LOW);
-
-      
-    }
-    else if (butt_state == HIGH && begun == false){
-      begun = true;
-      //match begun
-      digitalWrite(9, HIGH);
-      digitalWrite(8, LOW);
-      digitalWrite(3, LOW);
-      
-      delay(500);
-      digitalWrite(3, HIGH);
-      digitalWrite(8, LOW);
-      digitalWrite(9, LOW);
-    //COMEÇA PANCADA
-    }
-
-    else if (butt_state == HIGH && begun == true){
-      begun = false; 
-
-      Serial.println("PARA TUDO");
-
-      Motors::stop();
-    }
-  }

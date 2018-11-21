@@ -17,9 +17,9 @@
 
 #define PIN_BUTTON 4
 
-#define PIN_RED_RGB 8
-#define PIN_GREEN_RGB 7
-#define PIN_BLUE_RGB 9
+#define PIN_GREEN_RGB 8
+#define PIN_BLUE_RGB 7
+#define PIN_RED_RGB 9
 
 #define PIN_REFL_SENSOR1 A6
 #define PIN_REFL_SENSOR2 A1

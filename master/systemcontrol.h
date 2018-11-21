@@ -1,32 +1,23 @@
-
-
 #include <Thread.h>
 #include <ThreadController.h>
 
 
-
-#ifndef SYSTEMCONTROL.H 
-#define SYSTEMCONTROL.H 
-
+#ifndef SYSTEMCONTROL_H
+#define SYSTEMCONTROL_H
 
 extern ThreadController controller; 
 
-class SystemControl{
-public:
-  static void init();
+class SystemControl {
+  public:
+    static int bright_read;
+    static int button_state;
+    static int infra_distance;
 
-  static bool buttonStartStop(bool button_press);
 
-  static int getColorSensors();
-
-  static int bright_read;
-
-  static int infraDistance;
-  
+    static void init();
+    static bool buttonStartStop(bool button_press);
+    static int getColorSensors();  
 };
-
-static int button_state;
-
 
 
 #endif  

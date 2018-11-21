@@ -30,20 +30,8 @@ void loop(){
       digitalWrite(PIN_GREEN_RGB, LOW);
       digitalWrite(PIN_BLUE_RGB, LOW);
 
-
-      
-    
-
-
-
-      digitalWrite(STBY, HIGH);
-
-      digitalWrite(AIN1, HIGH);
-      digitalWrite(AIN2, LOW);
-      digitalWrite(PWMA, HIGH);
-      digitalWrite(BIN1, HIGH);
-      digitalWrite(BIN2, LOW);
-      digitalWrite(PWMB, HIGH);
+      Motors::move(1, 100, 0);
+      Motors::move(2, 100, 0);
 
 
       delay(1000);
@@ -52,22 +40,18 @@ void loop(){
       Serial.println("hello estou debbugando");
       digitalWrite(AIN1, HIGH);
       digitalWrite(AIN2, LOW);
-      digitalWrite(PWMA, LOW);
+      analogWrite(PWMA, LOW);
       digitalWrite(BIN1, HIGH);
       digitalWrite(BIN2, LOW);
-      digitalWrite(PWMB, LOW);
+      analogWrite(PWMB, LOW);
 
 
       delay(1000);
 
+      Motors::stop();
 
 
-      digitalWrite(AIN1, LOW);
-      digitalWrite(AIN2, HIGH);
-      digitalWrite(PWMA, HIGH);
-      digitalWrite(BIN1, HIGH);
-      digitalWrite(BIN2, LOW);
-      digitalWrite(PWMB, HIGH);
+      delay(5000);
 
         /*controller.run();
         

@@ -53,6 +53,17 @@ void Motors::move(int motor, int speed, int direction){ //vou tentar fazer um m√
 }
 
 void Motors::stop(){
-//enable standby
+
+  analogWrite(PWMB, 0);
+  analogWrite(PWMA, 0);
+
+
+  digitalWrite(AIN1, HIGH);
+  digitalWrite(AIN2, HIGH);
+  digitalWrite(BIN1, HIGH);
+  digitalWrite(BIN2, HIGH);
+
+  //enable standby
   digitalWrite(STBY, LOW);
+
 }

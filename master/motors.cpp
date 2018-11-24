@@ -22,14 +22,12 @@ void Motors::init(){
 }
 
 
-void Motors::move(int motor, int speed, int direction){ //vou tentar fazer um módulo que dirija os dois ao mesmo tempo
-                                                        //que não seja uma cópia do vss...
+void Motors::move(int motor, int speed, int direction){
 //Move specific motor at speed and direction
 //motor: 0 for B 1 for A
 //speed: 0 is off, and 255 is full speed
 //direction: 0 clockwise, 1 counter-clockwise
 
-  Serial.println("Ligou o torretoni");
   digitalWrite(STBY, HIGH); //disable standby
 
   bool inPin1 = LOW;
@@ -53,6 +51,9 @@ void Motors::move(int motor, int speed, int direction){ //vou tentar fazer um m�
 }
 
 void Motors::stop(){
+//enable standby
+
+  digitalWrite(STBY, LOW);
 
   analogWrite(PWMB, 0);
   analogWrite(PWMA, 0);
@@ -62,8 +63,5 @@ void Motors::stop(){
   digitalWrite(AIN2, HIGH);
   digitalWrite(BIN1, HIGH);
   digitalWrite(BIN2, HIGH);
-
-  //enable standby
-  digitalWrite(STBY, LOW);
 
 }

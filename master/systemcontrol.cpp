@@ -6,18 +6,39 @@
 ThreadController controller;
 
 
-int SystemControl::bright_read;
+int SystemControl::bright_read1;
+int SystemControl::bright_read2;
 int SystemControl::button_state;
 int SystemControl::infra_distance;
 
+//declaração das threads
+void threadColorSensors_run();
+Thread threadColorSensors(threadColorSensors_run, 50);
 
+void threadInfraSensor_run();
+Thread threadInfraSensor(threadInfraSensor_run, 50);
+
+//callback das threads
+void threadInfraSensor_run(){
+  SystemControl::infra_distance = analogRead(PIN_IR_SENSOR);
+
+}
+
+void threadColorSensors_run(){
+ SystemControl::bright_read1 = analogRead(PIN_REFL_SENSOR1);
+ SystemControl::bright_read2 = analogRead(PIN_REFL_SENSOR2);
+} 
+
+
+//
 void SystemControl::init() {
 
-
   pinMode(PIN_BUTTON, INPUT);
+
   pinMode(PIN_RED_RGB, OUTPUT);
   pinMode(PIN_GREEN_RGB, OUTPUT);
   pinMode(PIN_BLUE_RGB, OUTPUT);
+  
   pinMode(PIN_REFL_SENSOR1, INPUT);
   pinMode(PIN_REFL_SENSOR2, INPUT);
 
@@ -28,6 +49,7 @@ void SystemControl::init() {
 }
 
 //começa e inicia a lógica principal
+
 bool SystemControl::buttonStartStop(bool button_press){
   if (button_press){  
     if (button_state == 0){
@@ -37,7 +59,7 @@ bool SystemControl::buttonStartStop(bool button_press){
 
       button_state++;
       
-      delay(1000); //esperando a partida começar
+      delay(2000); //esperando a partida começar
       
       digitalWrite(PIN_GREEN_RGB, HIGH);
       digitalWrite(PIN_RED_RGB, LOW);
@@ -68,21 +90,6 @@ bool SystemControl::buttonStartStop(bool button_press){
   }
 }
 
-//declaração das threads
-void threadColorSensors_run();
-Thread threadColorSensors(threadColorSensors_run, 100);
-
-void threadInfraSensor_run();
-Thread threadInfraSensor(threadInfraSensor_run, 1000);
-
-//callback das threads
-void threadInfraSensor_run(){
-  SystemControl::infra_distance = analogRead(PIN_IR_SENSOR);
-}
-
-void threadColorSensors_run(){
- SystemControl::bright_read = analogRead(PIN_REFL_SENSOR1);
-} 
 
 
 int SystemControl::getColorSensors(){

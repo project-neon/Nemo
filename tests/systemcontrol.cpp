@@ -44,33 +44,32 @@ void threadColorSensors_run(){
  SystemControl::bright_read1 = analogRead(PIN_REFL_SENSOR1);
  SystemControl::bright_read2 = analogRead(PIN_REFL_SENSOR2);
 
-
-
- if(SystemControl::bright_read1 < SystemControl::firstReading1 && SystemControl::bright_read2 < SystemControl::firstReading2){
+ if(SystemControl::bright_read1 < SystemControl::firstReading1 || SystemControl::bright_read2 < SystemControl::firstReading2){
   SystemControl::white=0;
   }
-  else{SystemControl::white=1;
+  else{
+    SystemControl::white=1;
   }
 
 
- if(SystemControl::bright_read1 < SystemControl::firstReading1 && !(SystemControl::bright_read2 < SystemControl::firstReading2)){
-    //se somente o sensor de cor da esquerda detecta branco
-    SystemControl::rightWhite=1;
- }
- else{
-  SystemControl::rightWhite=0;
- }
-
- if(SystemControl::bright_read2 < SystemControl::firstReading2 && !(SystemControl::bright_read1 < SystemControl::firstReading1)){
-  //se somente o sensor de cor da direita detecta branco
+ if(SystemControl::bright_read1 < SystemControl::firstReading1){
     SystemControl::leftWhite=1;
- }
- else{
+  } 
+
+else{
   SystemControl::leftWhite=0;
- }
+  }
 
+ if(SystemControl::bright_read2 < SystemControl::firstReading2){
+    SystemControl::rightWhite=1;
+  } 
+  
+else{
+  SystemControl::rightWhite=0;
+  }
 
-} 
+}
+
 
 void threadMotorChange_run(){
   SystemControl::snek = !SystemControl::snek;
@@ -114,8 +113,8 @@ bool SystemControl::buttonStartStop(bool button_press){
       digitalWrite(PIN_RED_RGB, LOW);
       digitalWrite(PIN_BLUE_RGB, LOW);
 
-      firstReading1 = analogRead(PIN_REFL_SENSOR1) - 100;
-      firstReading2 = analogRead(PIN_REFL_SENSOR2) - 100;
+      firstReading1 = analogRead(PIN_REFL_SENSOR1) - 50;
+      firstReading2 = analogRead(PIN_REFL_SENSOR2) - 50;
       //COMEÇA PANCADA
 
       return true;

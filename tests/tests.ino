@@ -12,28 +12,25 @@ O código está quase pronto. Comentários em português para maior legibilidade
 bool achou = false;
 
 
-void turn180degrees() {
+void turndegrees(float angulo) {
+
+
+  if(angulo < 0){
 
   Motors::driveTank(95, -95);
 
-  //Serial.println("beyblade");
+  }
 
-  delay(420);
-
-  Motors::stop();
-
-}
-
-
-void turn90degrees() {
-
-  Motors::driveTank(75, -75);
+  else{
+  Motors::driveTank(95, -95);
+  }
 
   //Serial.println("beyblade");
 
-  delay(220);
+  delay(420*abs(angulo)/180);
 
   Motors::stop();
+
 }
 
 
@@ -43,11 +40,7 @@ void setup() {
 
   SystemControl::init();
 
-
   attachInterrupt(SystemControl::white, Motors::stop, LOW);
-
-
-
   
   Serial.begin(9600);
 
@@ -94,24 +87,33 @@ void loop() {
     //turn180degrees();
     //Motors::stop();
     //delay(3000);
-    
+    //Serial.print(" Leitura: ");
+    //Serial.println(SystemControl::bright_read1);
+    //delay(300);
     if(!SystemControl::white){
-      //Serial.println("branco!");
-      //Serial.println(SystemControl::bright_read1);
+
+
+      ///*
+      if(SystemControl::rightWhite && SystemControl::leftWhite){
+        Motors::driveTank(-100, -100);
+        delay(200);
+        turndegrees(180);
+      }
+      else if(SystemControl::rightWhite){
+        Motors::driveTank(-100, -100);
+        delay(200);
+        turndegrees(150);
+      }
+
+      else if(SystemControl::leftWhite){
+        Motors::driveTank(-100, -100);
+        delay(200);
+        turndegrees(-150);
+
+      }
+    
       //Serial.println(SystemControl::bright_read2);
-
-      
-      Motors::driveTank(-100, -100);
-     
-      delay(200);
-
-      //Serial.println(SystemControl::bright_read2);
       //Serial.println(SystemControl::bright_read1);
-
-      turn180degrees();
-
-      //Motors::move(1, 120, 1);
-      //Motors::move(2, 120, 1);
 
 
       //debug!
@@ -119,9 +121,13 @@ void loop() {
       //Serial.println(SystemControl::bright_read1);
       //Serial.println(SystemControl::bright_read2);
       //delay(100);
+      
       }
+
       else{
-        if(SystemControl::infra_distance > 200)
+        
+        ///*
+        if(SystemControl::infra_distance > 150)
         {
   
             //Serial.print("estou te vendo! Leitura: ");
@@ -132,7 +138,7 @@ void loop() {
               Motors::driveTank(100, 100);
   
 
-              while(SystemControl::infra_distance > 200 && SystemControl::white){
+              while(SystemControl::infra_distance > 150 && SystemControl::white){
               controller.run();
               
               Motors::driveTank(100, 100);
@@ -140,8 +146,8 @@ void loop() {
               }
           }
 
-        else if(SystemControl::white){ 
-  
+        else{ 
+          
             //search
             achou = false;
             if (SystemControl::snek){
@@ -156,11 +162,11 @@ void loop() {
  
 
           } 
-
-      }
-
+      //*/
+      
+      
     }   
-    //*/
+    
 
 
     /* MOTORS DEBUG
@@ -186,7 +192,7 @@ void loop() {
     delay(2000) 
     */
 
-  
+  }
   
   //esse é o fim da lógica principal, e o programa volta à esperar o input do botão...
   //o Motors:stop() chamado aqui não desliga os motores
@@ -194,5 +200,9 @@ void loop() {
   delay(1000);
   delay(1);
   Motors::stop();
+
+  
+
+
 
 }

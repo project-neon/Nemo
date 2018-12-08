@@ -11,12 +11,15 @@ class SystemControl {
   public:
     static int bright_read1;
     static int bright_read2;
-    static int button_state;
     static int infra_distance;
+
+    static int button_state;
     static int firstReading1;
     static int firstReading2;
+
     static bool white;
     static bool snek;
+    
     static bool leftWhite;
     static bool rightWhite;
 

@@ -5,6 +5,7 @@ O código está quase pronto. Comentários em português para maior legibilidade
 
 */ 
 
+
 #include "_config.h"
 #include "systemcontrol.h"
 #include "motors.h"
@@ -12,24 +13,26 @@ O código está quase pronto. Comentários em português para maior legibilidade
 bool achou = false;
 
 
+
+
 void turndegrees(float angulo) {
 
-
-  if(angulo < 0){
-
-  Motors::driveTank(95, -95);
-
-  }
-
-  else{
-  Motors::driveTank(95, -95);
-  }
-
-  //Serial.println("beyblade");
-
-  delay(420*abs(angulo)/180);
-
-  Motors::stop();
+    if(angulo < 0){
+        Motors::driveTank(95, -95);
+      }
+  
+      else{
+        Motors::driveTank(95, -95);
+      }
+  
+      //Serial.println("beyblade");
+      int i = 0;
+      while(i<420 && analogRead(PIN_IR_SENSOR) < 125){
+        i++;
+        delay(1);
+      }
+  
+    Motors::stop();
 
 }
 
@@ -41,7 +44,7 @@ void setup() {
   SystemControl::init();
 
   attachInterrupt(SystemControl::white, Motors::stop, LOW);
-  
+
   Serial.begin(9600);
 
 }
@@ -84,36 +87,36 @@ void loop() {
     //Serial.println("TA NA HORA DO PAU");
 
     controller.run();
+
+    //debugging
     //turn180degrees();
     //Motors::stop();
     //delay(3000);
     //Serial.print(" Leitura: ");
     //Serial.println(SystemControl::bright_read1);
     //delay(300);
+
     if(!SystemControl::white){
 
 
       ///*
       if(SystemControl::rightWhite && SystemControl::leftWhite){
         Motors::driveTank(-100, -100);
-        delay(200);
+        delay(300);
         turndegrees(180);
       }
       else if(SystemControl::rightWhite){
         Motors::driveTank(-100, -100);
-        delay(200);
-        turndegrees(150);
+        delay(300);
+        turndegrees(180);
       }
 
       else if(SystemControl::leftWhite){
         Motors::driveTank(-100, -100);
-        delay(200);
-        turndegrees(-150);
+        delay(300);
+        turndegrees(-180);
 
       }
-    
-      //Serial.println(SystemControl::bright_read2);
-      //Serial.println(SystemControl::bright_read1);
 
 
       //debug!
@@ -127,8 +130,7 @@ void loop() {
       else{
         
         ///*
-        if(SystemControl::infra_distance > 150)
-        {
+        if(SystemControl::infra_distance > 155){
   
             //Serial.print("estou te vendo! Leitura: ");
             //Serial.println(SystemControl::infra_distance);
@@ -138,7 +140,7 @@ void loop() {
               Motors::driveTank(100, 100);
   
 
-              while(SystemControl::infra_distance > 150 && SystemControl::white){
+              while(SystemControl::white && !digitalRead(PIN_BUTTON)){ //lock-on
               controller.run();
               
               Motors::driveTank(100, 100);
@@ -148,21 +150,31 @@ void loop() {
 
         else{ 
           
+
+            /* 
+            
+            Motors:driveTank(40,-40);
+            
+
+            */
+
+            ///*
             //search
             achou = false;
             if (SystemControl::snek){
-               Motors::driveTank(100,60);
+               Motors::driveTank(90,45);
             }
             else {
-               Motors::driveTank(60,100);
-
+               Motors::driveTank(45,90);
             }
+
+            //*/
             //Serial.print("estou CEGO! Leitura: ");
             //Serial.println(SystemControl::infra_distance);
  
 
           } 
-      //*/
+      //*/ such smart comment-uncomment!
       
       
     }   
@@ -174,7 +186,7 @@ void loop() {
       Motors::move(1, 80, 1); //motor 1, 80 para testes
       Motors::move(2, 80, 1); //motor 2, 80 para testes
       LOG("First");
-    delay(1000);
+      delay(1000);
     
 
     Motors::stop();
@@ -200,9 +212,6 @@ void loop() {
   delay(1000);
   delay(1);
   Motors::stop();
-
-  
-
 
 
 }

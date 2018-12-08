@@ -1,11 +1,10 @@
 
-
 #include "_config.h"
 #include "motors.h"
 #include "systemcontrol.h"
 
 
-
+// Initialize pins
 void Motors::init(){
 
   pinMode(STBY, OUTPUT);
@@ -18,50 +17,39 @@ void Motors::init(){
   pinMode(BIN1, OUTPUT);
   pinMode(BIN2, OUTPUT);
 
-
 }
 
+void Motors::driveTank(float m1, float m2){
 
-void Motors::move(int motor, int speed, int direction){
-//Move specific motor at speed and direction
-//motor: 0 for B 1 for A
-//speed: 0 is off, and 255 is full speed
-//direction: 0 clockwise, 1 counter-clockwise
+  // Limit Powers
+  m1 = min(max(m1, -100), 100);
+  m2 = min(max(m2, -100), 100);
 
-  digitalWrite(STBY, HIGH); //disable standby
+  // Map powers
+  int powerOutA = m1 * (MOTOR_ABS_MAX / 100.0);
+  int powerOutB = m2 * (MOTOR_ABS_MAX / 100.0);
 
-  bool inPin1 = LOW;
-  bool inPin2 = HIGH;
+  // Set power
+  analogWrite(PWMA, abs(powerOutA));
+  analogWrite(PWMB, abs(powerOutB));
 
-  if(direction == 1){
-    inPin1 = HIGH;
-    inPin2 = LOW;
-  }
+  // Set Directions
+  digitalWrite(AIN1, powerOutA > 0 ? HIGH : LOW);
+  digitalWrite(AIN2, powerOutA > 0 ? LOW : HIGH);
 
-  if(motor == 1){
-  digitalWrite(AIN1, inPin1);
-  digitalWrite(AIN2, inPin2);
-  analogWrite(PWMA, speed);
-  }
-  else{
-  digitalWrite(BIN1, inPin1);
-  digitalWrite(BIN2, inPin2);
-  analogWrite(PWMB, speed);
-  }
+  digitalWrite(BIN1, powerOutB > 0 ? HIGH : LOW);
+  digitalWrite(BIN2, powerOutB > 0 ? LOW : HIGH);
 }
 
 void Motors::stop(){
-//enable standby
+  // Set power (0)
+  digitalWrite(PWMA, HIGH);
+  digitalWrite(PWMB, HIGH);
 
-  digitalWrite(STBY, LOW);
-
-  analogWrite(PWMB, 0);
-  analogWrite(PWMA, 0);
-
-
+  // Set both DIRS to 0
   digitalWrite(AIN1, HIGH);
   digitalWrite(AIN2, HIGH);
+
   digitalWrite(BIN1, HIGH);
   digitalWrite(BIN2, HIGH);
-
 }

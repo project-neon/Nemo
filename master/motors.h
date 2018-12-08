@@ -1,18 +1,20 @@
-#ifndef MOTORS.H 
-#define MOTORS.H 
+#include "_config.h"
+
+#ifndef MOTORS_H
+#define MOTORS_H
 
 
-class Motors{ 
+class Motors{
+public:
 
-public: 
+  // Initialize pins
+  static void init();
 
-	static void init();
+  // Set power of both motors
+  static void driveTank(float m1, float m2);
 
-	static void move(int motor, int speed, int direction);
-
-	static void stop();
-
-
+  // Set state as Iddle (Turn off motors)
+  static void stop();
 };
 
-#endif 
+#endif

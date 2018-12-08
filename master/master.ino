@@ -2,7 +2,9 @@
 
 O código está quase pronto. Comentários em português para maior legibilidade!
 
+
 */ 
+
 
 #include "_config.h"
 #include "systemcontrol.h"
@@ -11,26 +13,38 @@ O código está quase pronto. Comentários em português para maior legibilidade
 bool achou = false;
 
 
-void turn180degrees() {
-
-	Motors::move(1, 80, 1); 
-	Motors::move(0, 80, 0);
-
-	Serial.println("beyblade");
 
 
-	Motors::stop();
-	delay(2000);
+void turndegrees(float angulo) {
+    if(angulo < 0){
+        Motors::driveTank(95, -95);
+      }
+  
+      else{
+        Motors::driveTank(95, -95);
+      }
+  
+      //Serial.println("beyblade");
+      int i = 0;
+      while(i<420 && analogRead(PIN_IR_SENSOR) < 120){
+        i++;
+        delay(1);
+      }
+  
+    Motors::stop();
 }
 
 
 void setup() {
 
-	Motors::init();
+  Motors::init();
 
-	SystemControl::init();
+  SystemControl::init();
 
-	Serial.begin(9600);
+
+  attachInterrupt(SystemControl::white, Motors::stop, LOW);
+
+  Serial.begin(9600);
 
 }
 
@@ -38,143 +52,135 @@ void setup() {
 void loop() {
 
 
-	while(!SystemControl::buttonStartStop(digitalRead(PIN_BUTTON))){
-		
-		Motors::stop();  
-							/*sendo sincero, eu não sei se isto deveria estar aqui, visto que
-						   chamar isto sempre dentro do while talvez não seja tão eficiente...
-						   porém, os motores não desligavam após pressionar o butão novamente, ;d */
+  while(!SystemControl::buttonStartStop(digitalRead(PIN_BUTTON))){
+    
+    Motors::stop();  
 
-		digitalWrite(PIN_RED_RGB, HIGH);
-		digitalWrite(PIN_GREEN_RGB, LOW);
-		digitalWrite(PIN_BLUE_RGB, LOW);
-		
+    digitalWrite(PIN_RED_RGB, HIGH);
+    digitalWrite(PIN_GREEN_RGB, LOW);
+    digitalWrite(PIN_BLUE_RGB, LOW);
+    
 
-		/* debuggar sensores
+    /* debuggar sensores
 
-		controller.run();
+    controller.run();
 
-		Serial.print("Infravermelho: ");
-		Serial.println(SystemControl::infra_distance);
-		
-		Serial.print("Refletância 1: ");
-		Serial.println(SystemControl::bright_read);
-		
-		Serial.print("Refletância 2: ");
-		Serial.println(analogRead(PIN_REFL_SENSOR2));
-		
+    Serial.print("Infravermelho: ");
+    Serial.println(SystemControl::infra_distance);
+    
+    Serial.print("Refletância 1: ");
+    Serial.println(SystemControl::bright_read);
+    
+    Serial.print("Refletância 2: ");
+    Serial.println(analogRead(PIN_REFL_SENSOR2));
+    
 
-		delay(500); */
-		
-	}
+    delay(500); */
+    
+  }
 
 
-	while(SystemControl::buttonStartStop(digitalRead(PIN_BUTTON))) {
+  while(SystemControl::buttonStartStop(digitalRead(PIN_BUTTON))) {
 
-		//LOGICA DO ESQUEMA
-		//Serial.println("TA NA HORA DO PAU");
+    //LOGICA DO ESQUEMA
+    //Serial.println("TA NA HORA DO PAU");
 
+    controller.run();
 
-		controller.run();
-		//turn180degrees();
-		//Motors::stop();
-		//delay(3000);
-		///*
-		if(SystemControl::bright_read1 > 400 && SystemControl::bright_read2 > 400){
-			
-			//Motors::move(1, 120, 1);
-			//Motors::move(2, 120, 1);
+    //debugging
+    //Motors::stop();
+    //delay(3000);
+    //Serial.print(" Leitura: ");
+    //Serial.println(SystemControl::bright_read1);
+    //delay(300);
 
-
-			//debug!
-			Serial.println("preto");
-			Serial.println(SystemControl::bright_read1);
-			Serial.println(SystemControl::bright_read2);
-			delay(100);
-
-			/*if(SystemControl::infra_distance > 200){
-
-				Serial.print("estou te vendo! Leitura: ");
-				Serial.println(SystemControl::infra_distance);
-				
-				achou = true;
-	
-				Motors::move(1, 80, 1);
-				Motors::move(2, 80, 1);
-
-			while(SystemControl::infra_distance > 200 && achou == true){
-				controller.run();
-
-				Motors::move(1, 80, 1);
-				Motors::move(2, 80, 1);
-
-				}
-
-			}
-
-			
-			else{ 
-
-				//search
-				achou = false;
-				Serial.print("estou CEGO! Leitura: ");
-				Serial.println(SystemControl::infra_distance);
-				Motors::move(1, 80, 1);
-				Motors::move(2, 80, 0);
-			} 
-
-			*/
-		}
-		
-		else if(SystemControl::bright_read1 < 400 || SystemControl::bright_read2 < 400){
-
-			Serial.println("branco!");
-			Serial.println(SystemControl::bright_read1);
-			Serial.println(SystemControl::bright_read2);
-
-			/*
-			Motors::move(1, 80, 0);
-			Motors::move(2, 80, 0);
-			
-			Serial.println(SystemControl::bright_read2);
-			Serial.println(SystemControl::bright_read1);
-
-			turn180degrees();
-		*/
-		}	 	
-		//*/
+    if(!SystemControl::white){
 
 
-		/* MOTORS DEBUG
+      ///* smart comment uncomment!
 
-	    Motors::move(1, 80, 1); //motor 1, 80 para testes
-	    Motors::move(2, 80, 1); //motor 2, 80 para testes
-	    LOG("First");
-		delay(1000);
-		
+      if(SystemControl::rightWhite && SystemControl::leftWhite){
 
-		Motors::stop();
+        Motors::driveTank(-100, -100);
+        delay(400);
+        turndegrees(180);
+      }
+      else if(SystemControl::rightWhite){
+        Motors::driveTank(-100, -100);
+        delay(400);
+        turndegrees(180);
+      }
 
-		delay(2000); 
+      else if(SystemControl::leftWhite){
+        Motors::driveTank(-100, -100);
+        delay(400);
+        turndegrees(-180);
 
-		LOG("Second");
-		Motors::move(1, 80, 0);
-		Motors::move(2, 80, 0);
+      }
 
-		delay(1000);
 
-		Motors::stop();
-	
-		delay(2000) 
-		*/
+      //debug!
+      //Serial.println("preto");
+      //Serial.println(SystemControl::bright_read1);
+      //Serial.println(SystemControl::bright_read2);
+      //delay(100);
+      
+      }
 
-	}
-	
-	//esse é o fim da lógica principal, e o programa volta à esperar o input do botão...
-	//o Motors:stop() chamado aqui não desliga os motores
-	Motors::stop();
-	delay(1000);
-	delay(1);
-	Motors::stop();
+      else{
+        
+        ///*
+        if(SystemControl::infra_distance > 225){
+  
+            //Serial.print("estou te vendo! Leitura: ");
+            //Serial.println(SystemControl::infra_distance);
+              
+              //achou = true;
+      
+              Motors::driveTank(100, 100);
+  
+
+              while(SystemControl::white && !digitalRead(PIN_BUTTON)){ //lock-on
+              controller.run();
+              
+              Motors::driveTank(100, 100);
+  
+              }
+          }
+
+        else{ 
+          
+
+            /* 
+            
+            Motors::driveTank(80,-80);
+
+            */
+            //search
+            achou = false;
+            if (SystemControl::snek){
+               Motors::driveTank(90,45);
+            }
+            else {
+               Motors::driveTank(45,90);
+            }
+
+            //*/
+            //Serial.print("estou CEGO! Leitura: ");
+            //Serial.println(SystemControl::infra_distance);
+
+          } 
+      //*/ such smart comment-uncomment!
+    }   
+
+  }
+  
+  //esse é o fim da lógica principal, e o programa volta à esperar o input do botão...
+  //o Motors:stop() chamado aqui não desliga os motores
+  Motors::stop();
+  delay(1000);
+  delay(1);
+  Motors::stop();
+
 
 }

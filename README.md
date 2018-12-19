@@ -18,4 +18,5 @@ This project would not have been possible without the help of several people, wh
 * [Ivan Seidel](https://github.com/ivanseidel)
 * [João Pedro Vilas Boas](https://github.com/joaopedrovbs)
 * [Matheus Peres](https://github.com/mettsal)
+* Matheus Shimizu
 * [Marcelo Farias](https://github.com/marcelojrfarias)

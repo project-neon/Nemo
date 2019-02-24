@@ -1,6 +1,10 @@
 #include "Thread.h"
 #include "ThreadController.h"
 
+// Para configuracao do PWM
+const int freq = 5000;
+const int resolution = 8;
+
 // pinos analogicos dos sensores UF
 #define pinFront 35
 #define pinDir 32
@@ -73,7 +77,7 @@ void procura(){
   
 }
 
-void move(int motor, int speed, int direction){
+void move(int motor, int speed, int direction){ // Funcao usada para movimentar os motores
   boolean inPin1 = LOW;
   boolean inPin2 = HIGH;
 
@@ -81,45 +85,47 @@ void move(int motor, int speed, int direction){
     inPin1 = HIGH;
     inPin2 = LOW;
   }
-
-  if(motor == 1)  {
+  if(speed == 0){ // Caso queremos parar os motores
+    inPin1 = LOW; // Deixamos o AIN1 e AIN2 em "LOW"
+    inPin2 = LOW;
+}
+  if(motor == 0)  {
     digitalWrite(AIN1, inPin1);
     digitalWrite(AIN2, inPin2);
-    analogWrite(PWMA, speed);
+    ledcWrite(MOTOR_A, speed);
   }
   else{
     digitalWrite(BIN1, inPin1);
     digitalWrite(BIN2, inPin2);
-    analogWrite(PWMB, speed);
+    ledcWrite(MOTOR_A, speed);
   }
 }
 
-void cerebro(){
+void cerebro(){ Função usada para, através da funcao procura, tomar a decisão correta
   if (local == -1){ // gira direita se nao ver nada
     move(MOTOR_A, 255, 1); //Motor da Esquerda, para o Motor, sentido de rotação
     move(MOTOR_B, 255, 1); //Motor da Direita, a toda velocidade, sentido de rotação
-  }
+  } // ver se o speed esta bom para achar objetos
 
   if (local == 0){ // Frente
     move(MOTOR_A, 255, 1);
     move(MOTOR_B, 255, 2);
-  }
+  } // confirmar se ele realmente vai pra frente
 
   if(local == 1){ // gira direita 
     move(MOTOR_A, 255, 1);
     move(MOTOR_B, 255, 1);
-  }
+  } // confirmar se ele realmente vai pra direita
   
   if(local == 2){ // gira esquerda 
     move(MOTOR_A, 255, 2);
     move(MOTOR_B, 255, 2);
-  }
+  } // confirmar se ele realmente vai pra esquerda
 
   if(local == 3){ // anda pra tras
     move(MOTOR_A, 255, 2);
     move(MOTOR_B, 255, 1);
-  
-  }
+  } // confirmar se ele realmente vai pra tras
 }
 
 
@@ -142,12 +148,18 @@ void setup() {
   controlaRobo.setInterval(55);
   controlaRobo.onRun(cerebro);
 
+  // CONFIGURACAO DO PWM
+  ledcSetup(MOTOR_A, freq, resolution);
+  ledcSetup(MOTOR_B, freq, resolution);
+
+  ledcAttachPin(PWMA, MOTOR_A);
+  ledcAttachPin(PWMB, MOTOR_B);
+  
   cpu.add(&controlaRobo);
   cpu.add(&ThreadDosSesores_UF);
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
   while(!digitalRead(pinBotao)){
     cpu.run();
   }

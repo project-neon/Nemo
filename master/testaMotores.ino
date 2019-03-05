@@ -1,8 +1,5 @@
 // Definir quais são as portas 
 
-int freq = 5000;
-int resolution = 8;
-
 // Led
 #define Led_Verde 23 
 #define Led_Azul 22 

@@ -1,10 +1,6 @@
 #include "Thread.h"
 #include "ThreadController.h"
 
-// Para configuracao do PWM
-const int freq = 5000;
-const int resolution = 8;
-
 // pinos analogicos dos sensores UF
 #define pinFront 35
 #define pinDir 32

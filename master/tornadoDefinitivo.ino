@@ -1,3 +1,14 @@
+/*
+
+   tornado.ino
+   
+   Autor: Project Neon - Felipe Andrade
+   Março de 2010
+
+
+*/
+
+
 #define pinBot                  A5 
 
 // pinos analogicos dos sensores Refletancia

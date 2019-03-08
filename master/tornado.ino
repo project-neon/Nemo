@@ -1,3 +1,13 @@
+/*
+
+   tornado.ino
+   
+   Autor: Project Neon - Felipe Andrade
+   Março de 2010
+
+
+*/
+
 #include "Thread.h"
 #include "ThreadController.h"
 

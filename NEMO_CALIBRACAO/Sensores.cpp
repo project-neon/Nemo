@@ -10,7 +10,7 @@
 	int Sensores::Leste_min;
 	int Sensores::Leste_max;
 	int Sensores::values[4];
-
+// [0]NORTE [1]OESTE [2]SUL [3]LESTE
 
 void Sensores::init(){
 	pinMode(GPIO_sensores, OUTPUT);
@@ -37,8 +37,8 @@ void Sensores::update(){
 
 		if(valorNorte<=Sensores::Norte_min && valorNorte>=Sensores::Norte_max)
 		{
-			Serial.print("O valor de norte é");
-			Serial.println(valorNorte);
+			//Serial.print("O valor de norte é");
+			//Serial.println(valorNorte);
 			Sensores::values[0]	= map(valorNorte,Sensores::Norte_max,Sensores::Norte_min,4,40);
 		}
 		else
@@ -48,8 +48,8 @@ void Sensores::update(){
 	int valorOeste = analogRead(SensorOeste)/4;
 		if(valorOeste<=Sensores::Oeste_min && valorOeste>=Sensores::Oeste_max)
 		{
-			Serial.print("O valor de oeste é");
-			Serial.println(valorOeste);
+			//Serial.print("O valor de oeste é");
+			//Serial.println(valorOeste);
 			Sensores::values[1] = map(valorOeste,Sensores::Oeste_min,Sensores::Oeste_max,40,4);
 		}
 		else

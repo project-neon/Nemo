@@ -2,6 +2,7 @@
 #include <Sensores.h>
 Move walk(3,4,5,9,7,8);
 Sensores eyes;
+// pino botao
 #define pinBot                  A5
 
 // pinos analogicos dos sensores Refletancia

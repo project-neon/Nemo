@@ -1,13 +1,7 @@
-#include <Motor.h>
-#include <Sensores.h>
-Move walk(3,4,5,9,7,8);
-Sensores eyes;
+#include "Motors.h"
+#include "Sensores.h"
 // pino botao
 #define pinBot                  A5
-
-// pinos analogicos dos sensores Refletancia
-#define SRF                    A6 
-#define SRT                    A7 
 
 // pinos dos leds
 #define Led_Azul               2
@@ -21,44 +15,45 @@ boolean condicao = false; // indica se ele viu algo na frente ou na traseira
 
 unsigned long tempo = 0;
 
-boolean visao(){ // Uma função que retorna false se o robô não viu alguma coisa em qualquer um dos sensores
-eyes.update();   // Uma função que retorna true se o robô viu alguma coisa em qualquer um dos sensores
-if(eyes.getNor() != -1 || eyes.getLes() != -1 || eyes.getOes() != -1 || eyes.getSul() != -1)
-  return false;
-  else return true;
-}
-
 void sloth (boolean FrTr, int last){              // FrTr determina se o inimigo esta na frente ou atrás/ last é a ultima leitura do sensor IF
     if((last)>5){                                 // Essa função pode ser dividida em duas partes. A primeira seria para o caso o robô estiver no ponto cego longe dele 
       for(int i = 0; i < 3 ; i++){                // Ele repete a rotina três vezes 
           tempo = millis(); 
           while((millis()-tempo)<48){             // vira durante 48ms ( determinar o melhor tempo ) para direita procurando o adversário 
-            if(visao()) return;                   // Se qualquer um dos sensores ver alguma coisa ele retorna e assim tomando a melhor atitude 
-            walk.right(150);                      // vira para a direita
+          controller.run();
+            if(Sensores::visao()) return;                   // Se qualquer um dos sensores ver alguma coisa ele retorna e assim tomando a melhor atitude 
+            Motors::driveTank(45,-45);                      // vira para a direita
           }
           tempo = millis(); 
           while((millis()-tempo)<48){             // vira durante 48ms ( determinar o melhor tempo ) para esquerda procurando o adversário 
-            if(visao()) return;                   // Se qualquer um dos sensores ver alguma coisa ele retorna e assim tomando a melhor atitude 
-            walk.left(150);                       // vira para a esquerda
+          controller.run();
+            if(Sensores::visao()) return;                   // Se qualquer um dos sensores ver alguma coisa ele retorna e assim tomando a melhor atitude 
+            Motors::driveTank(45,-45);                       // vira para a esquerda
           }
   }
 }
     else{
-      while(visao()){                             // A segunda seria para o caso o robô estiver no ponto cego perto dele 
-      FrTr ? walk.front(200) : walk.back(200);    // Onde o parâmetro FrTr determina se o adversário esta na frente ou atrás 
+      while(Sensores::visao()){                             // A segunda seria para o caso o robô estiver no ponto cego perto dele 
+      controller.run();
+      FrTr ? Motors::driveTank(45,45) : Motors::driveTank(-45,-45);    // Onde o parâmetro FrTr determina se o adversário esta na frente ou atrás 
       Serial.println("Agora vou te matar");       // Dado que ambos os lados do robos podem atacar o inimigo
     }
     return;
     }
 }
-          
+
+void falling(){
+  Motors::stop();
+  delay(5);
+  Sensores::direcao ? Motors::driveTank(-45,-45) : Motors::driveTank(45,45);
+  delay(50);
+}
 void setup() {
+  Sensores::init();
+	Motors::init();
   // Config dos leds
   pinMode(Led_Azul, OUTPUT);
   pinMode(Led_Vermelho, OUTPUT);
-  // Config dos sensores de refletância 
-  pinMode(SRF, INPUT);
-  pinMode(SRT, INPUT);
   // Config do botao
   pinMode(pinBot, INPUT);
   // Config dos pinos que estabelecem pinos de STBY
@@ -71,50 +66,56 @@ void setup() {
   // PARA DEBUG
   Serial.begin(115200);
 
+  attachInterrupt(Sensores::white, falling, LOW);
+
 }
 
 void loop() {
-  walk.brake();
+  Motors::stop();
   digitalWrite(Led_Azul, LOW);
   while(!digitalRead(pinBot)){
     Serial.println("Wait");
     delay(10);
   }
+  
+
   digitalWrite(Led_Azul, HIGH);
   delay(2000);
   
   while(!digitalRead(pinBot)){
-    eyes.update();
-    while( eyes.getNor() != -1){ // enquanto ele vê alguma 
-      walk.front(200);           // coisa na frente dele
-      last = eyes.getNor();      // ele vai para frente
-      eyes.update();                   
+    controller.run();
+    while( Sensores::values[0] != -1){ // enquanto ele vê alguma 
+      Motors::driveTank(45,45);           // coisa na frente dele
+      last = Sensores::values[0] ;     // ele vai para frente
+      controller.run();                
       condicao = true;           // condicao indica se ele viu alguma coisa na frente
       direcao = true;
       Serial.println("vi frente");
       delay(10);
     }
-    while(eyes.getSul() != -1 ){  // enquanto ele vê alguma
-      walk.back(200);        // coisa na tras dele
-      last = eyes.getSul();  // ele vai para tras
-      eyes.update();           
+    while(Sensores::values[2] != -1 ){  // enquanto ele vê alguma
+      Motors::driveTank(-45,-45);        // coisa na tras dele
+      last = Sensores::values[2] ; // ele vai para tras
+      controller.run();      
       condicao = true;       // condicao indica se ele viu alguma coisa na frente
       direcao = false;       // direcao indica se ele viu na frente ou atras
       Serial.println("vi tras");
       delay(10);
     }
+    /*
       if(condicao){ // Se ele entrou em um dos pontos cegos do Sensor IF
         sloth(direcao, last);
         condicao = !condicao;
       }
-  eyes.update();
-  if(eyes.getOes() != -1 && eyes.getNor() == -1 && eyes.getSul() == -1){
-      walk.left(200);
+      */
+  controller.run();
+  if(Sensores::values[1] != -1 && Sensores::values[0] == -1 && Sensores::values[2]== -1){
+      Motors::driveTank(-45,45);
       delay(195); // determinar valor pra girar certo
   }
   
-  else if(eyes.getLes() != -1 && eyes.getNor() == -1 && eyes.getSul() == -1){
-      walk.right(200);
+  else if(Sensores::values[3] != -1 && Sensores::values[0] == -1 && Sensores::values[2]== -1){
+      Motors::driveTank(45,-45);
       delay(195); // determinar valor pra girar certo
   }
   }

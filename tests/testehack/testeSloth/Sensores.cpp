@@ -28,7 +28,7 @@ void Sensores::update();
 Thread threadInfraSensor(Sensores::update, 25);
 
 void threadColorSensors_run(){
-	if(digitalRead(SRT)||digitalRead(SRF)){
+	if(digitalRead(SRT)||digitalRead(SRF)){ // 1 -> preto / 0 -> Black
 		Sensores::white=0;
 		digitalRead(SRT) ? Sensores::direcao = true : Sensores::direcao = false;		
 	}

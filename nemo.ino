@@ -1,9 +1,9 @@
-//Motor A
+//Motor A/
 #define PWMA 5 //Speed control
 #define AIN1 10	 //Direction
 #define AIN2 11 //Direction
 
-//Motor B
+//Motor B/
 #define PWMB 3 //Speed control
 #define BIN1 A3 //Direction
 #define BIN2 A2 //Direction

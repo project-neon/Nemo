@@ -42,12 +42,15 @@ void sloth (boolean FrTr, int last){              // FrTr determina se o inimigo
     }
 }
 
-void falling(){
+void falling(){ // função para quando o robô ver branco
   Motors::stop();
-  delay(5);
-  Sensores::direcao ? Motors::driveTank(-45,-45) : Motors::driveTank(45,45);
-  delay(50);
+  delay(2);
+  tempo = millis(); 
+  while((millis()-tempo)<50){
+    Sensores::direcao ? Motors::driveTank(-45,-45) : Motors::driveTank(45,45);
+  }
 }
+
 void setup() {
   Sensores::init();
 	Motors::init();
@@ -85,20 +88,20 @@ void loop() {
   while(!digitalRead(pinBot)){
     controller.run();
     while( Sensores::values[0] != -1){ // enquanto ele vê alguma 
-      Motors::driveTank(45,45);           // coisa na frente dele
+      Motors::driveTank(45,45);        // coisa na frente dele
       last = Sensores::values[0] ;     // ele vai para frente
       controller.run();                
-      condicao = true;           // condicao indica se ele viu alguma coisa na frente
+      condicao = true;                 // condicao indica se ele viu alguma coisa na frente
       direcao = true;
       Serial.println("vi frente");
       delay(10);
     }
-    while(Sensores::values[2] != -1 ){  // enquanto ele vê alguma
-      Motors::driveTank(-45,-45);        // coisa na tras dele
-      last = Sensores::values[2] ; // ele vai para tras
+    while(Sensores::values[2] != -1 ){ // enquanto ele vê alguma
+      Motors::driveTank(-45,-45);      // coisa na tras dele
+      last = Sensores::values[2] ;     // ele vai para tras
       controller.run();      
-      condicao = true;       // condicao indica se ele viu alguma coisa na frente
-      direcao = false;       // direcao indica se ele viu na frente ou atras
+      condicao = true;                 // condicao indica se ele viu alguma coisa na frente
+      direcao = false;                 // direcao indica se ele viu na frente ou atras
       Serial.println("vi tras");
       delay(10);
     }

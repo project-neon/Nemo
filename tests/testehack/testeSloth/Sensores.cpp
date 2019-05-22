@@ -42,10 +42,10 @@ void threadColorSensors_run(){
 void Sensores::init(){
 
 	controller.add(&threadColorSensors);
-  	controller.add(&threadInfraSensor);
+  controller.add(&threadInfraSensor);
 	
 	pinMode(SRF, INPUT);
-    pinMode(SRT, INPUT);
+  pinMode(SRT, INPUT);
 
 
 	pinMode(GPIO_sensores, OUTPUT);
@@ -65,10 +65,11 @@ void Sensores::init(){
 }
 
 boolean Sensores::visao(){ // Uma função que retorna false se o robô não viu alguma coisa em qualquer um dos sensores
-// Uma função que retorna true se o robô viu alguma coisa em qualquer um dos sensores
+  
 if(Sensores::values[0] != -1 || Sensores::values[1] != -1 || Sensores::values[2] != -1 || Sensores::values[3] != -1)
   return false;
   else return true;
+  
 }
 void Sensores::update(){
 	
@@ -117,5 +118,3 @@ void Sensores::update(){
 		}
 	
 }
-
-

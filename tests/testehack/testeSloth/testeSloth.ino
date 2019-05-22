@@ -17,6 +17,7 @@ unsigned long tempo = 0;
 
 void sloth (boolean FrTr, int last){              // FrTr determina se o inimigo esta na frente ou atrás/ last é a ultima leitura do sensor IF
     if((last)>5){                                 // Essa função pode ser dividida em duas partes. A primeira seria para o caso o robô estiver no ponto cego longe dele 
+    Serial.println("sloth");
       for(int i = 0; i < 3 ; i++){                // Ele repete a rotina três vezes 
           tempo = millis(); 
           while((millis()-tempo)<48){             // vira durante 48ms ( determinar o melhor tempo ) para direita procurando o adversário 
@@ -45,10 +46,12 @@ void sloth (boolean FrTr, int last){              // FrTr determina se o inimigo
 void falling(){ // função para quando o robô ver branco
   Motors::stop();
   delay(2);
+  Serial.println("branco");
   tempo = millis(); 
   while((millis()-tempo)<50){
     Sensores::direcao ? Motors::driveTank(-45,-45) : Motors::driveTank(45,45);
   }
+  
 }
 
 void setup() {
@@ -96,6 +99,7 @@ void loop() {
       Serial.println("vi frente");
       delay(10);
     }
+    /*
     while(Sensores::values[2] != -1 ){ // enquanto ele vê alguma
       Motors::driveTank(-45,-45);      // coisa na tras dele
       last = Sensores::values[2] ;     // ele vai para tras
@@ -104,7 +108,8 @@ void loop() {
       direcao = false;                 // direcao indica se ele viu na frente ou atras
       Serial.println("vi tras");
       delay(10);
-    }
+    }*/
+    
     /*
       if(condicao){ // Se ele entrou em um dos pontos cegos do Sensor IF
         sloth(direcao, last);
@@ -112,13 +117,15 @@ void loop() {
       }
       */
   controller.run();
-  if(Sensores::values[1] != -1 && Sensores::values[0] == -1 && Sensores::values[2]== -1){
+  if(Sensores::values[1] != -1 && Sensores::values[0] == -1 ){
       Motors::driveTank(-45,45);
+      Serial.println("vi esquerda");
       delay(195); // determinar valor pra girar certo
   }
   
-  else if(Sensores::values[3] != -1 && Sensores::values[0] == -1 && Sensores::values[2]== -1){
+  else if(Sensores::values[3] != -1 && Sensores::values[0] == -1){
       Motors::driveTank(45,-45);
+      Serial.println("vi direita");
       delay(195); // determinar valor pra girar certo
   }
   }

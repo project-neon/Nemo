@@ -43,10 +43,10 @@ void Sensores::threadColorSensors_run(){
 void Sensores::init(){
 
 	controller.add(&threadColorSensors);
-  	controller.add(&threadInfraSensor);
+  controller.add(&threadInfraSensor);
 	
 	pinMode(SRF, INPUT);
-    pinMode(SRT, INPUT);
+  pinMode(SRT, INPUT);
 
 
 	pinMode(GPIO_sensores, OUTPUT);

@@ -15,25 +15,26 @@ ThreadController controller;
 	int Sensores::Leste_max;
 	int Sensores::values[4];
 // [0]NORTE [1]OESTE [2]SUL [3]LESTE
-
-	bool Sensores::white;
+  int Sensores::valor_preto;
+	bool Sensores::white =true;
 	bool Sensores::direcao;
 
 
 //declaração das threads
-void threadColorSensors_run();
-Thread threadColorSensors(threadColorSensors_run, 25);
+void Sensores::threadColorSensors_run();
+Thread threadColorSensors(Sensores::threadColorSensors_run, 50);
 
 void Sensores::update();
 Thread threadInfraSensor(Sensores::update, 25);
 
-void threadColorSensors_run(){
-	if(digitalRead(SRT)||digitalRead(SRF)){ // 1 -> preto / 0 -> Black
+void Sensores::threadColorSensors_run(){
+	if(analogRead(A6) < Sensores::valor_preto ){
 		Sensores::white=0;
-		digitalRead(SRT) ? Sensores::direcao = true : Sensores::direcao = false;		
+		//digitalRead(SRT) ? Sensores::direcao = true : Sensores::direcao = false;		
+    Sensores::direcao = true;
 	}
 	else{
-		Sensores::white=1;
+	  Sensores::white=1;
 	}
 }
 
@@ -42,10 +43,10 @@ void threadColorSensors_run(){
 void Sensores::init(){
 
 	controller.add(&threadColorSensors);
-  controller.add(&threadInfraSensor);
+  	controller.add(&threadInfraSensor);
 	
 	pinMode(SRF, INPUT);
-  pinMode(SRT, INPUT);
+    pinMode(SRT, INPUT);
 
 
 	pinMode(GPIO_sensores, OUTPUT);
@@ -65,55 +66,55 @@ void Sensores::init(){
 }
 
 boolean Sensores::visao(){ // Uma função que retorna false se o robô não viu alguma coisa em qualquer um dos sensores
-  
+// Uma função que retorna true se o robô viu alguma coisa em qualquer um dos sensores
 if(Sensores::values[0] != -1 || Sensores::values[1] != -1 || Sensores::values[3] != -1)
   return false;
   else return true;
-  
-}void Sensores::update(){
-
+}
+void Sensores::update(){
+	
 //Valor_min aproximadamente 110
 //Valos_max aproximadamente 20
-    int valorNorte = analogRead(SensorNorte)/4;
+	int valorNorte = analogRead(SensorNorte)/4;
 
-        if(valorNorte<=Sensores::Norte_min && valorNorte>=Sensores::Norte_max)
-        {
-            //Serial.print("O valor de norte é");
-            //Serial.println(valorNorte);
-            Sensores::values[0]    =40- map(valorNorte,Sensores::Norte_max,Sensores::Norte_min,4,40);
-        }
-        else
-        {
-            Sensores::values[0] = -1;
-        }
-    int valorOeste = analogRead(SensorOeste)/4;
-        if(valorOeste<=Sensores::Oeste_min && valorOeste>=Sensores::Oeste_max)
-        {
-            //Serial.print("O valor de oeste é");
-            //Serial.println(valorOeste);
-            Sensores::values[1] = map(valorOeste,Sensores::Oeste_max,Sensores::Oeste_min,40,4);
-        }
-        else
-        {
-            Sensores::values[1] = -1;
-        }
-    int valorSul = analogRead(SensorSul)/4;
-        if(valorSul<=Sensores::Sul_min && valorSul>=Sensores::Sul_max)
-        {
-            Sensores::values[2] = map(valorSul,Sensores::Sul_max,Sensores::Sul_min,40,4);
-        }
-        else
-        {
-            Sensores::values[2] = -1;
-        }
-    int valorLeste = analogRead(SensorLeste)/4;
-        if(valorLeste<=Sensores::Leste_min && valorLeste>=Sensores::Leste_max)
-        {
-            Sensores::values[3] = map(valorLeste,Sensores::Leste_max,Sensores::Leste_min,40,4);
-        }
-        else
-        {
-            Sensores::values[3] = -1;
-        }
-
+		if(valorNorte<=Sensores::Norte_min && valorNorte>=Sensores::Norte_max)
+		{
+			//Serial.print("O valor de norte é");
+			//Serial.println(valorNorte);
+			Sensores::values[0]	= map(valorNorte,Sensores::Norte_max,Sensores::Norte_min,4,40);
+		}
+		else
+		{
+			Sensores::values[0] = -1;
+		}
+	int valorOeste = analogRead(SensorOeste)/4;
+		if(valorOeste<=Sensores::Oeste_min && valorOeste>=Sensores::Oeste_max)
+		{
+			//Serial.print("O valor de oeste é");
+			//Serial.println(valorOeste);
+			Sensores::values[1] = map(valorOeste,Sensores::Oeste_min,Sensores::Oeste_max,40,4);
+		}
+		else
+		{
+			Sensores::values[1] = -1;
+		}
+	int valorSul = analogRead(SensorSul)/4;
+		if(valorSul<=Sensores::Sul_min && valorSul>=Sensores::Sul_max)
+		{
+			Sensores::values[2] = map(valorSul,Sensores::Sul_min,Sensores::Sul_max,40,4);
+		}
+		else
+		{
+			Sensores::values[2] = -1;
+		}
+	int valorLeste = analogRead(SensorLeste)/4;
+		if(valorLeste<=Sensores::Leste_min && valorLeste>=Sensores::Leste_max)
+		{
+			Sensores::values[3] = map(valorLeste,Sensores::Leste_min,Sensores::Leste_max,40,4);
+		}
+		else
+		{
+			Sensores::values[3] = -1;
+		}
+	
 }

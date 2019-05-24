@@ -1,3 +1,4 @@
+// ultima programação feita 
 #include "Motors.h"
 #include "Sensores.h"
 // pino botao
@@ -16,8 +17,8 @@ boolean condicao = false; // indica se ele viu algo na frente ou na traseira
 unsigned long tempo = 0;
 
 void sloth (boolean FrTr, int last){              // FrTr determina se o inimigo esta na frente ou atrás/ last é a ultima leitura do sensor IF
+  /*
     if((last)>5){                                 // Essa função pode ser dividida em duas partes. A primeira seria para o caso o robô estiver no ponto cego longe dele 
-    Serial.println("sloth");
       for(int i = 0; i < 3 ; i++){                // Ele repete a rotina três vezes 
           tempo = millis(); 
           while((millis()-tempo)<48){             // vira durante 48ms ( determinar o melhor tempo ) para direita procurando o adversário 
@@ -32,26 +33,15 @@ void sloth (boolean FrTr, int last){              // FrTr determina se o inimigo
             Motors::driveTank(45,-45);                       // vira para a esquerda
           }
   }
-}
-    else{
-      while(Sensores::visao()){                             // A segunda seria para o caso o robô estiver no ponto cego perto dele 
+}*/
+    //else{
+      while(Sensores::visao() ){                             // A segunda seria para o caso o robô estiver no ponto cego perto dele 
       controller.run();
       FrTr ? Motors::driveTank(45,45) : Motors::driveTank(-45,-45);    // Onde o parâmetro FrTr determina se o adversário esta na frente ou atrás 
       Serial.println("Agora vou te matar");       // Dado que ambos os lados do robos podem atacar o inimigo
     }
     return;
-    }
-}
-
-void falling(){ // função para quando o robô ver branco
-  Motors::stop();
-  delay(2);
-  Serial.println("branco");
-  tempo = millis(); 
-  while((millis()-tempo)<50){
-    Sensores::direcao ? Motors::driveTank(-45,-45) : Motors::driveTank(45,45);
-  }
-  
+    //}
 }
 
 void setup() {
@@ -66,13 +56,14 @@ void setup() {
   pinMode(A4, OUTPUT);
   pinMode(6, OUTPUT);
   digitalWrite(A4, HIGH);
-  digitalWrite(6, HIGH);
+  digitalWrite(6, LOW); // Lembrar que eu desliguei isso
   // Liga o led vermelho quando liga o robô
   digitalWrite(Led_Vermelho, HIGH);
+  Sensores::valor_preto = analogRead(A6)- 500;
   // PARA DEBUG
   Serial.begin(115200);
 
-  attachInterrupt(Sensores::white, falling, LOW);
+  attachInterrupt(Sensores::white,Motors::stop, LOW);
 
 }
 
@@ -80,7 +71,9 @@ void loop() {
   Motors::stop();
   digitalWrite(Led_Azul, LOW);
   while(!digitalRead(pinBot)){
+    controller.run();
     Serial.println("Wait");
+    Serial.println(Sensores::white);
     delay(10);
   }
   
@@ -89,41 +82,45 @@ void loop() {
   delay(2000);
   
   while(!digitalRead(pinBot)){
+  if(!Sensores::white){
+    //Sensores::direcao ? Motors::driveTank(-45,-45) : Motors::driveTank(45,45);
+    Motors::driveTank(45,-45);
+    Serial.println("vi branco");
+    delay(50);
+  }
     controller.run();
-    while( Sensores::values[0] != -1){ // enquanto ele vê alguma 
-      Motors::driveTank(45,45);        // coisa na frente dele
+    while( Sensores::values[0] != -1 && Sensores::white){ // enquanto ele vê alguma 
+      Motors::driveTank(45,45);           // coisa na frente dele
       last = Sensores::values[0] ;     // ele vai para frente
       controller.run();                
-      condicao = true;                 // condicao indica se ele viu alguma coisa na frente
+      condicao = true;           // condicao indica se ele viu alguma coisa na frente
       direcao = true;
       Serial.println("vi frente");
       delay(10);
     }
     /*
-    while(Sensores::values[2] != -1 ){ // enquanto ele vê alguma
-      Motors::driveTank(-45,-45);      // coisa na tras dele
-      last = Sensores::values[2] ;     // ele vai para tras
+    while(Sensores::values[2] != -1 ){  // enquanto ele vê alguma
+      Motors::driveTank(-45,-45);        // coisa na tras dele
+      last = Sensores::values[2] ; // ele vai para tras
       controller.run();      
-      condicao = true;                 // condicao indica se ele viu alguma coisa na frente
-      direcao = false;                 // direcao indica se ele viu na frente ou atras
+      condicao = true;       // condicao indica se ele viu alguma coisa na frente
+      direcao = false;       // direcao indica se ele viu na frente ou atras
       Serial.println("vi tras");
       delay(10);
     }*/
-    
-    /*
       if(condicao){ // Se ele entrou em um dos pontos cegos do Sensor IF
         sloth(direcao, last);
         condicao = !condicao;
       }
-      */
+      
   controller.run();
-  if(Sensores::values[1] != -1 && Sensores::values[0] == -1 ){
+  if(Sensores::values[1] != -1 && Sensores::values[0] == -1 && Sensores::white){
       Motors::driveTank(-45,45);
       Serial.println("vi esquerda");
       delay(195); // determinar valor pra girar certo
   }
   
-  else if(Sensores::values[3] != -1 && Sensores::values[0] == -1){
+  else if(Sensores::values[3] != -1 && Sensores::values[0] == -1 && Sensores::white){
       Motors::driveTank(45,-45);
       Serial.println("vi direita");
       delay(195); // determinar valor pra girar certo

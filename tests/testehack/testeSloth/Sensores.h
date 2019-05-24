@@ -9,6 +9,7 @@ extern ThreadController controller;
 
 class Sensores{
 public:
+  static int valor_preto;
 	static int values[4];
 	static int Norte_min;
 	static int Norte_max;
@@ -29,7 +30,6 @@ public:
 	//Se o valor estiver fora do valor esperado o valor armazenado é NULL
 	static void update();
 	static boolean visao();
-
-	static int getColorSensors(); 
+  static void threadColorSensors_run();
 };
 #endif

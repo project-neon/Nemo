@@ -1,9 +1,9 @@
 #include "Arduino.h"
 #define botao                   A5
 #define GPIO_sensores           A4
+#define SensorNorte             A0
 #define SRF                     A6 
-#define SRT                     A7
-#define SensorNorte             A0 
+#define SRT                     A7 
 #define SensorOeste             A1
 #define SensorSul               A2
 #define SensorLeste             A3

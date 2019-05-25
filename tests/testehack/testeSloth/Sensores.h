@@ -9,7 +9,8 @@ extern ThreadController controller;
 
 class Sensores{
 public:
-  static int valor_preto;
+  static int valor_preto_tras;
+  static int valor_preto_frente;
 	static int values[4];
 	static int Norte_min;
 	static int Norte_max;

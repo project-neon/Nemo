@@ -15,7 +15,8 @@ ThreadController controller;
 	int Sensores::Leste_max;
 	int Sensores::values[4];
 // [0]NORTE [1]OESTE [2]SUL [3]LESTE
-  int Sensores::valor_preto;
+  int Sensores::valor_preto_frente;
+  int Sensores::valor_preto_tras;
 	bool Sensores::white =true;
 	bool Sensores::direcao;
 
@@ -28,14 +29,15 @@ void Sensores::update();
 Thread threadInfraSensor(Sensores::update, 25);
 
 void Sensores::threadColorSensors_run(){
-	if(analogRead(A6) < Sensores::valor_preto ){
+  /*
+	if(analogRead(A6) < Sensores::valor_preto_frente || analogRead(A7) < Sensores::valor_preto_tras){
 		Sensores::white=0;
-		//digitalRead(SRT) ? Sensores::direcao = true : Sensores::direcao = false;		
-    Sensores::direcao = true;
+		analogRead(A6) < Sensores::valor_preto_frente ? Sensores::direcao = true : Sensores::direcao = false;		
+    Sensores::direcao = true 
 	}
-	else{
+	else{*/
 	  Sensores::white=1;
-	}
+	//}
 }
 
 
@@ -67,7 +69,7 @@ void Sensores::init(){
 
 boolean Sensores::visao(){ // Uma função que retorna false se o robô não viu alguma coisa em qualquer um dos sensores
 // Uma função que retorna true se o robô viu alguma coisa em qualquer um dos sensores
-if(Sensores::values[0] != -1 || Sensores::values[1] != -1 || Sensores::values[3] != -1)
+if(Sensores::values[0] != -1 || Sensores::values[3] != -1)
   return false;
   else return true;
 }

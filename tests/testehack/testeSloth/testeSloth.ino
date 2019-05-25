@@ -16,7 +16,7 @@ boolean condicao = false; // indica se ele viu algo na frente ou na traseira
 
 unsigned long tempo = 0;
 int count = 0;
-int velvirada = 45;
+int velvirada = 60;
 int velataque = 100;
 void sloth (boolean FrTr, int last){              // FrTr determina se o inimigo esta na frente ou atrás/ last é a ultima leitura do sensor IF
   /*
@@ -77,6 +77,7 @@ void setup() {
 }
 
 void loop() {
+  delay(300);
   Motors::stop();
   digitalWrite(Led_Azul, LOW);
   while(!digitalRead(pinBot)){
@@ -89,7 +90,8 @@ void loop() {
   
 
   digitalWrite(Led_Azul, HIGH);
-  delay(5000);
+  tempo = millis();
+  while ( millis() - tempo < 5000) Serial.println(millis() - tempo );
   
   while(!digitalRead(pinBot)){
   if(!Sensores::white){
@@ -98,7 +100,9 @@ void loop() {
     Sensores::direcao ? Motors::driveTank(velataque,velataque) : Motors::driveTank(-velataque,-velataque); // true -> é o sensor frente / false -> é o sensor tras
     Serial.println("vi branco");
   }
-    delay(100);
+    delay(200);
+    Motors::driveTank(-90,90);
+    delay(150);
 
   }
     controller.run();
@@ -111,7 +115,7 @@ void loop() {
       digitalWrite(Led_Azul, HIGH);
       Serial.println("vi frente");
     }
-    
+    /*
     while(Sensores::values[3] != -1 && Sensores::white){  // enquanto ele vê alguma
       Motors::driveTank(velataque,velataque);        // coisa na tras dele
       last = Sensores::values[2] ; // ele vai para tras
@@ -121,7 +125,7 @@ void loop() {
       digitalWrite(Led_Azul, HIGH);
       Serial.println("vi tras");
       delay(10);
-    }
+    }*/
       if(condicao){ // Se ele entrou em um dos pontos cegos do Sensor IF
         sloth(direcao, last);
         condicao = !condicao;
@@ -137,7 +141,10 @@ void loop() {
       Serial.println("vi esquerda");
       digitalWrite(Led_Azul, LOW);
   }
-  if(Sensores::visao()) Motors::driveTank(-velvirada,velvirada);
+  if(Sensores::visao()) {
+    Motors::driveTank(-velvirada,velvirada);
+    Serial.println("Se esconde não!!!");
+  }
   /*
   else if(Sensores::values[3] != -1 && Sensores::values[0] == -1 && Sensores::white){
       Motors::driveTank(velvirada,-velvirada);

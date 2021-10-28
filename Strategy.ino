@@ -10,32 +10,32 @@ void setup() {
   pinMode(Button1, INPUT);
   pinMode(Button2, INPUT);
   pinMode(Button3, INPUT);
+
 }
 
-void loop() {
-
-  if (Button1 == HIGH && Button2 == LOW && Button3 == LOW) {
+void loop () {
+  if (digitalRead(Button1)==HIGH && digitalRead(Button2)==LOW && digitalRead(Button3)==LOW) {
     digitalWrite(LED1, HIGH);
     digitalWrite(LED2, LOW);
   }
-  else if (Button1 == LOW && Button2 == HIGH && Button3 == LOW){
+  else if (digitalRead(Button1)==LOW && digitalRead(Button2)==HIGH && digitalRead(Button3)==LOW){
     digitalWrite(LED1, LOW);
     digitalWrite(LED2, HIGH);
   }
-  else if (Button1 == LOW && Button2 == LOW && Button3 == HIGH) {
+  else if (digitalRead(Button1)==LOW && digitalRead(Button2)==LOW && digitalRead(Button3)==HIGH) {
     digitalWrite(LED1, HIGH);
     digitalWrite(LED2, HIGH);
   }
-  else if (Button1 == HIGH && Button2 == HIGH && Button3 == LOW){
+  else if (digitalRead(Button1)==HIGH && digitalRead(Button2)==HIGH && digitalRead(Button3)==LOW){
     digitalWrite(LED1, HIGH);
     delay(1000);
     digitalWrite(LED1, LOW);
     delay(1000);
   }
-  else if  (Button1 == HIGH && Button2 == LOW && Button3 == HIGH) {
+  else if  (digitalRead(Button1)==HIGH && digitalRead(Button2)==LOW && digitalRead(Button3)==HIGH) {
     digitalWrite(LED2, HIGH);
     delay(1000);
     digitalWrite(LED2, LOW);
     delay(1000);
-  }
+  }  	
 }

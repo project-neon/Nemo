@@ -1,12 +1,13 @@
 #include <Wire.h>
 #include <VL53L0X.h>
+#include <config.h>
 
 VL53L0X sensor, sensor2;
 
-#define SHUT_1 0
+/*#define SHUT_1 0
 #define SHUT_2 1
 #define SHUT_3 2
-#define SHUT_4 3
+#define SHUT_4 3*/
 
 void setup()
 {
@@ -14,7 +15,7 @@ void setup()
     Wire.begin();
 
     pinMode(SHUT_1, OUTPUT);
-    pinMode(SHUT_2, OUTPUT;
+    pinMode(SHUT_2, OUTPUT);
 
     digitalWrite(SHUT_1, LOW);
     digitalWrite(SHUT_2, LOW);
@@ -22,31 +23,26 @@ void setup()
     delay(10);
 
     digitalWrite(SHUT_1, HIGH)
-    
+    sensor.setAddress(0x25);
 
-    sensor2.setAddress(0x32);
-
+    digitalWrite(SHUT_2, HIGH)
+    sensor.setAddress(0x27);
     
     pinMode(SHUT_1, INPUT);
-  // É possível alterar o endereço do sensor 1 apenas com o código abaixo
-  // Como o sensor 2 já está com endereço diferente, não é necessário desligá-lo,
-  // pois ele não interferirá na comunicação
-  //sensor.setAdress(0x31);
  
-  // Inicializa sensores
-  sensor.init();
-  sensor2.init();
-  sensor.setTimeout(500);
-  sensor2.setTimeout(500);
+    sensor.init();
+    sensor2.init();
+    sensor.setTimeout(600);
+    sensor2.setTimeout(600);
 }
 
 void loop()
 {
-  // Mede a distância dos dois sensores
-  int dist1 = sensor.readRangeSingleMillimeters();
-  int dist2 = sensor2.readRangeSingleMillimeters();
+
+    int distance0 = sensor.readRangeSingleMillimeters();
+    int distance1 = sensor2.readRangeSingleMillimeters();
  
-  Serial.print(dist1);
-  Serial.print(" - ");
-  Serial.println(dist2);
+    Serial.print(distance0);
+    Serial.print(" - ");
+    Serial.println(distance1);
 }

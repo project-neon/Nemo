@@ -9,3 +9,5 @@
 #define SHUT_2 1
 #define SHUT_3 2
 #define SHUT_4 3
+#define sensor1 6  
+#define sensor2 7

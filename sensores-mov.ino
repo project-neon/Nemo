@@ -1,6 +1,6 @@
 #include <Wire.h>
 #include <VL53L0X.h>
-#include <config.h>
+#include "_config.h"
 
 VL53L0X sensor, sensor2;
 
@@ -26,7 +26,7 @@ void setup()
     sensor.setAddress(0x25);
 
     digitalWrite(SHUT_2, HIGH)
-    sensor.setAddress(0x27);
+    sensor2.setAddress(0x27);
     
     pinMode(SHUT_1, INPUT);
  
@@ -34,6 +34,16 @@ void setup()
     sensor2.init();
     sensor.setTimeout(600);
     sensor2.setTimeout(600);
+    
+    //Talvez seja melhor iniciar as variáveis distance0 e distance1 aqui para elas não
+    //ficarem sendo iniciadas toda a vez no loop
+    
+    //Esse próximo seria só uma recomendação, talvez trocar os nomes por:
+    //distance0 --> distance1
+    //distance1 --> distance2
+    //Para ficar mais parecido ao sensor e sensor2
+    //Embora talvez seja uma boa mudar também o "sensor" para
+    //sensor --> sensor1
 }
 
 void loop()

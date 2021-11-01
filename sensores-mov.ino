@@ -35,15 +35,20 @@ void setup()
     sensor1.setTimeout(600);
     sensor2.setTimeout(600);
     
-    int distance1 = sensor1.readRangeSingleMillimeters();
-    int distance2 = sensor2.readRangeSingleMillimeters();
+    int distance1;
+    int distance2;
     
 }
 
 void loop()
 {
 
+    distance1 = sensor1.readRangeSingleMillimeters()*10;
+    distance2 = sensor2.readRangeSingleMillimeters()*10;
+    
     Serial.print(distance1);
+    Serial.print(cm);
     Serial.print(" - ");
     Serial.println(distance2);
+    Serial.print(cm);
 }

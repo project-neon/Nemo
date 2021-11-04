@@ -27,15 +27,21 @@ void loop () {
     digitalWrite(LED2, HIGH);
   }
   else if (digitalRead(Button1)==HIGH && digitalRead(Button2)==HIGH && digitalRead(Button3)==LOW){
+    digitalWrite(LED2, LOW);
     digitalWrite(LED1, HIGH);
     delay(1000);
     digitalWrite(LED1, LOW);
     delay(1000);
   }
   else if  (digitalRead(Button1)==HIGH && digitalRead(Button2)==LOW && digitalRead(Button3)==HIGH) {
+    digitalWrite(LED1, LOW);
     digitalWrite(LED2, HIGH);
     delay(1000);
     digitalWrite(LED2, LOW);
     delay(1000);
-  }  	
+  }
+  else {
+  digitalWrite(LED1, LOW);
+  digitalWrite(LED2, LOW);
+ }
 }

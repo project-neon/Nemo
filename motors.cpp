@@ -1,4 +1,5 @@
 #include "_config.h"
+#define MOTOR_ABS_MAX 255
 
 void Motors::init(){
 
@@ -39,4 +40,22 @@ void Motors::driveTank(float m1, float m2){
     digitalWrite(BIN1, m2 > 0 ? LOW : HIGH);
     digitalWrite(BIN2, m2 > 0 ? HIGH : LOW);
 
+}
+
+void motorstart(int Power){
+
+	Motors::stop();
+	delay(5000);
+
+	Motors::driveTank(Power,Power);
+
+	Motors::driveTank(-Power,Power);
+
+	Motors::driveTank(Power,-Power);
+	
+	Motors::driveTank(-Power,-Power);
+
+	Motors::stop();
+	delay(20);
+	return;
 }

@@ -15,16 +15,8 @@ void setup(){
 void loop(){
 
     if (Button1 == HIGH) {
-        Motors::driveTank(Power,Power);
-	    delay(4000);
-	    Motors::driveTank(-Power,Power);
-	    delay(4000);
-	    Motors::driveTank(Power,-Power);
-	    delay(4000);
-	    Motors::driveTank(-Power,-Power);
-	    delay(4000);
-	    Motors::stop();
-        delay(20)
+        motorstart(50);
+        
 }
     if (Button2 == HIGH){
         delay(20)

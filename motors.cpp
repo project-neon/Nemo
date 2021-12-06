@@ -48,13 +48,14 @@ void motorstart(int Power){
 	delay(5000);
 
 	Motors::driveTank(Power,Power);
-
+	delay(5000);
 	Motors::driveTank(-Power,Power);
-
+	delay(5000);	
 	Motors::driveTank(Power,-Power);
-	
+	delay(5000);
 	Motors::driveTank(-Power,-Power);
-
+	delay(5000);
+	
 	Motors::stop();
 	delay(20);
 	return;

@@ -1,6 +1,7 @@
 #include "_config.h"
-#define MOTOR_ABS_MAX 255
+#include "motors.h"
 
+//Inicializa os pinos
 void Motors::init(){
 
     pinMode(PWMA, OUTPUT);
@@ -13,6 +14,7 @@ void Motors::init(){
     digitalWrite(STBY,HIGH);
 }
 
+//Desliga os motores
 void Motors::stop(){
   
     digitalWrite(PWMA, LOW);
@@ -23,7 +25,8 @@ void Motors::stop(){
     digitalWrite(BIN2, HIGH);
 }
 
-void Motors::driveTank(float m1, float m2){
+//Executa o teste dos motores
+void Motors::driveTeste(float m1, float m2){
 
     m1 = min(max(m1, -100), 100);
     m2 = min(max(m2, -100), 100);
@@ -40,23 +43,4 @@ void Motors::driveTank(float m1, float m2){
     digitalWrite(BIN1, m2 > 0 ? LOW : HIGH);
     digitalWrite(BIN2, m2 > 0 ? HIGH : LOW);
 
-}
-
-void motorstart(int Power){
-
-	Motors::stop();
-	delay(5000);
-
-	Motors::driveTank(Power,Power);
-	delay(5000);
-	Motors::driveTank(-Power,Power);
-	delay(5000);	
-	Motors::driveTank(Power,-Power);
-	delay(5000);
-	Motors::driveTank(-Power,-Power);
-	delay(5000);
-	
-	Motors::stop();
-	delay(20);
-	return;
 }

@@ -12,8 +12,32 @@ decode_results results;
 
 void setup() {
   // put your setup code here, to run once:
+  Serial.begin(9600);
+  Serial.println("Setup start...");
 
-  irrecv.enableIRIn(); //inicia o receptor
+  pinMode(LED1, OUTPUT);
+  Serial.println("Led OK");
+
+  pinMode(B1, INPUT);
+  pinMode(B2, INPUT);
+  pinMode(B3, INPUT);
+  Serial.println("Seletor OK");
+
+  pinMode(borda1, INPUT);
+  pinMode(borda2, INPUT);
+  Serial.println("Sensores de borda OK");
+  
+  irrecv.enableIRIn();
+  Serial.println("Sensor IR OK");
+
+  Motors::init();
+  Serial.println("Motors ON  ");
+
+  Sensores::init();
+  Serial.println("Sensores de distância iniciado...");
+
+  Serial.println("Setup Finished...  ");
+  delay(900);
 }
 
 //--------- FUNÇÕES PARA TESTES ----------//

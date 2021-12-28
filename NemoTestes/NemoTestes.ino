@@ -16,6 +16,84 @@ void setup() {
   irrecv.enableIRIn(); //inicia o receptor
 }
 
+//--------- FUNÇÕES PARA TESTES ----------//
+
+//Pisca Led
+void pisca(int frequencia,int piscagens){
+
+  while(millis()%(piscagens*frequencia*2)!=0){
+      if((millis()/frequencia)%2 == 0){
+          digitalWrite(LED1,1);
+      }
+      else
+          digitalWrite(LED1,0);
+  }
+      
+  digitalWrite(LED1,0);
+  
+}
+
+
+//Estratégia simples
+void estrategiaSimples(int Power){
+  
+  //TESTE DE ESTRATÉGIA AQUI
+  
+}
+
+//Teste dos Motores
+void testeMotores(int Power){
+  Motors::stop();
+  Motors::driveTeste(Power,Power);
+  delay(3000);
+  Motors::driveTeste(-Power,Power);
+  delay(3000);
+  Motors::driveTeste(Power,-Power);
+  delay(3000);
+  Motors::driveTeste(-Power,-Power);
+  delay(3000);
+  Motors::stop();
+  delay(20);
+  return;
+}
+
+//Teste dos sensores de ditância
+void testeSensores() {
+  Serial.print("sensor 1: ");
+  Serial.print(Sensores::get_valor(Sensores::sensor1));
+  Serial.print("  sensor 2: ");
+  Serial.print(Sensores::get_valor(Sensores::sensor2));
+  Serial.print("  sensor 3: ");
+  Serial.print(Sensores::get_valor(Sensores::sensor3));
+  Serial.print("  sensor 4: ");
+  Serial.println(Sensores::get_valor(Sensores::sensor4));
+  return;
+}
+
+//Teste dos sensores de borda
+void testeBordas(){
+  if (digitalRead(borda1) == LOW){
+    digitalWrite(LED1,HIGH);
+    delay(1000);
+    digitalWrite(LED1,LOW);
+    delay(1000); 
+  } 
+  else{
+    digitalWrite(LED1,LOW); 
+  }
+
+  if (digitalRead(borda2) == LOW){    
+    digitalWrite(LED1,HIGH);
+    delay(500);
+    digitalWrite(LED1,LOW);
+    delay(500); 
+  }
+  else{
+    digitalWrite(LED1,LOW); 
+  }
+}
+
+
 void loop() {
   // put your main code here, to run repeatedly:
 

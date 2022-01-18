@@ -1,8 +1,10 @@
 #define LED1 = 9;
 #define LED2 = 10;    
-#define sensor1 = 6;  
-#define sensor2 = 7;
-         
+#define sensor1 = A6;  
+#define sensor2 = A7;
+
+int cal = 0;
+
 void setup(){
     
     pinMode(LED1, OUTPUT);
@@ -13,17 +15,14 @@ void setup(){
     digitalWrite(LED1,LOW); 
     digitalWrite(LED2,LOW); 
 
-    int estado1;
-    int estado2;
-
 }
 
 void loop() {
 
-    estado1 = digitalRead(sensor1); 
-    estado2 = digitalRead(sensor2);
+    int estado1 = digitalRead(sensor1); 
+    int estado2 = digitalRead(sensor2);
 
-    if (estado1 == LOW) 
+    if (estado1 == cal) 
     {
         digitalWrite(LED1,HIGH); 
     } 
@@ -32,11 +31,11 @@ void loop() {
         digitalWrite(LED1,LOW); 
       }
 
-    if (estado2 == LOW) 
+    if (estado2 == cal) 
     {    
         digitalWrite(LED2,HIGH);
     }
-     else
+    else
      {
         digitalWrite(LED2,LOW); 
       } 

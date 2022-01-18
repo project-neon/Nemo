@@ -1,52 +1,41 @@
 #include <Wire.h>
 #include <VL53L0X.h>
-#include "_config.h"
 
-VL53L0X sensor1, sensor2;
+VL53L0X sensor, sensor2;
 
-/*#define SHUT_1 0
-#define SHUT_2 1
-#define SHUT_3 2
-#define SHUT_4 3*/
+#define XSHUT1 A0
+#define XSHUT2 A1
 
 void setup()
 {
-    Serial.begin(9600);
-    Wire.begin();
+  Serial.begin(9600);
+  Wire.begin();
 
-    pinMode(SHUT_1, OUTPUT);
-    pinMode(SHUT_2, OUTPUT);
+  pinMode(XSHUT1, OUTPUT);
+  pinMode(XSHUT2, INPUT);
 
-    digitalWrite(SHUT_1, LOW);
-    digitalWrite(SHUT_2, LOW);
 
-    delay(10);
+  digitalWrite(XSHUT1, LOW);
+  delay(2);
 
-    digitalWrite(SHUT_1, HIGH)
-    sensor1.setAddress(0x25);
+  sensor2.setAddress(0x32);
 
-    digitalWrite(SHUT_2, HIGH)
-    sensor2.setAddress(0x27);
-    
-    pinMode(SHUT_1, INPUT);
- 
-    sensor1.init();
-    sensor2.init();
-    sensor1.setTimeout(600);
-    sensor2.setTimeout(600);
-    
-    int distance1;
-    int distance2;
-    
+
+  pinMode(XSHUT1, INPUT);
+
+  sensor.init();
+  sensor2.init();
+  sensor.setTimeout(500);
+  sensor2.setTimeout(500);
 }
 
 void loop()
 {
 
-    distance1 = sensor1.readRangeSingleMillimeters()*10;
-    distance2 = sensor2.readRangeSingleMillimeters()*10;
-    
-    Serial.print(distance1 + "cm - " + distance2 + " cm");
-
-    
+  int dist1 = sensor.readRangeSingleMillimeters();
+  int dist2 = sensor2.readRangeSingleMillimeters();
+ 
+  Serial.print(dist1);
+  Serial.print(" - ");
+  Serial.println(dist2);
 }

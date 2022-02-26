@@ -31,8 +31,8 @@ void Motors::driveTeste(float m1, float m2){
     m1 = min(max(m1, -100), 100);
     m2 = min(max(m2, -100), 100);
 
-    int powerOutA = m1 * (MOTOR_ABS_MAX / 100.0);
-    int powerOutB = m2 * (MOTOR_ABS_MAX / 100.0);
+    int powerOutA = abs(m1 * (MOTOR_ABS_MAX / 100.0));
+    int powerOutB = abs(m2 * (MOTOR_ABS_MAX / 100.0));
 
     analogWrite(PWMA,powerOutA);
     analogWrite(PWMB,powerOutB);

@@ -1,4 +1,4 @@
-# Dory
+# Nemo
 3rd Sumo Robot for Project Neon. After Zumo and Nemo, comes Dory.
 
 Repositório de desenvolvimento para a Dory em 2022.

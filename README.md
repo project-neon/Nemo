@@ -1,7 +1,7 @@
 # Nemo
-3rd Sumo Robot for Project Neon. After Zumo and Nemo, comes Dory.
+2rd Sumo Robot for Project Neon. After Zumo, comes Nemo.
 
-Repositório de desenvolvimento para a Dory em 2022.
+Repositório de desenvolvimento para o Nemo em 2022.
 
 Usamos o fluxo de trabalho apresentado [aqui pelo Gamen](https://github.com/project-neon/codestyleguide/blob/master/git.md). Também está apresentado no [github flow](https://docs.github.com/pt/get-started/quickstart/github-flow). O resumo seria este:
 

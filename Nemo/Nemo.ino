@@ -7,6 +7,7 @@
 #include <ESP32Servo.h> //Comunicação com a ESC de cada motor
 #include <VL53L0X.h>    //sensores de distância
 #include <Wire.h>       //Auxiliar dos sensores
+#include <IRremote.h>
 
 //Bibliotecas internas
 #include "_config.h"
@@ -25,6 +26,8 @@ VL53L0X sensorTD;  //Sensor de trás direita
 IRrecv irrecv(JCONTROLLER);
 decode_results results;
 
+int stage = 0;
+
 String direction = ""; //Variável que indicará o sentido determinado pelos sensores
 int strategy = 0; //Por enquanto, eu estou escrevendo no código, depois vai ser decidido de acordo com o controle do 
 //0 = simples
@@ -39,9 +42,6 @@ int strategy = 0; //Por enquanto, eu estou escrevendo no código, depois vai ser
  */
 int flag = 0; //Direita --> 0, Esquerda --> 1, Valor inicial --> -1
 
-
-
-
 void setup(){
   
   Serial.begin(115200);
@@ -50,13 +50,13 @@ void setup(){
   Wire.begin();
   
   pinMode(SDIST_FE, OUTPUT);
-  pinMode(SDIST_FR, OUTPUT);
+  pinMode(SDIST_FD, OUTPUT);
   pinMode(SDIST_TE, OUTPUT);
-  pinMode(SDIST_TR, OUTPUT);
+  pinMode(SDIST_TD, OUTPUT);
   digitalWrite(SDIST_FE, LOW);
-  digitalWrite(SDIST_FR, LOW);
+  digitalWrite(SDIST_FD, LOW);
   digitalWrite(SDIST_TE, LOW);
-  digitalWrite(SDIST_TR, LOW);
+  digitalWrite(SDIST_TD, LOW);
   
   pinMode(SDIST_FE, INPUT);
   sensorFE.init(true);
@@ -146,8 +146,14 @@ void estrategiaSimples() {
     flag = 1;
   } 
   else if(distTE < distMax && distTD < distMax){
-    speedL = 100;
-    speedR = 100;
+    if(flag==1){
+      speedL = 0;
+      speedR = 100;
+      }
+    else{
+      speedL = 100;
+      speedR = 0;
+      }
     direction = "TRÁS";
   }   
   else{
@@ -193,7 +199,7 @@ void meiaLuaEmS() {
   strategy = 0; //Retorna pra estratégia padrão caso o ataque inicial não tenha dado certo
 }
 
-int branco_treshold = 500 //valor arbitrário de calibragem
+int branco_treshold = 500; //valor arbitrário de calibragem
 
 void loop() {
 
@@ -229,9 +235,9 @@ void loop() {
   
   if (stage==1) {  
     
-    digitalWrite(PIN_REDLED, HIGH);
+//    digitalWrite(PIN_REDLED, HIGH);
     delay(5);
-    digitalWrite(PIN_REDLED, LOW);
+//    digitalWrite(PIN_REDLED, LOW);
     delay(5);
     
     Serial.println("Estágio 1");
@@ -245,9 +251,9 @@ void loop() {
 
   else if (stage==2){  
     
-    digitalWrite(PIN_REDLED, HIGH);
+    //digitalWrite(PIN_REDLED, HIGH);
 
-      //Tomadas de decisão
+   //Tomadas de decisão
   //Os valores aqui utilizados servem apenas para um teste de tomada de decisão
   //O número "200" é um número aleatório apenas para o teste
 
@@ -259,8 +265,8 @@ void loop() {
   }
   
     switch(strategy) {
-    case "simple":
-      estrategiaSimples(90);
+    case 0:
+      estrategiaSimples();
       break;
     case 1:
       meiaLua();
@@ -269,7 +275,7 @@ void loop() {
       meiaLuaEmS();
       break;
      default:
-      estrategiaSimples(90);
+      estrategiaSimples();
       break;
   }
  
@@ -280,14 +286,22 @@ void loop() {
   Serial.print("\t\t");
   
   // Mostra o valor de cada sensor na tela e a decisão escolhida
-  Serial.print("R: ");
-  Serial.print(distR);
+  Serial.print("FD: ");
+  Serial.print(distFD);
   Serial.print("\t");
   Serial.print("C: ");
-  Serial.print(distC);
+  Serial.print((distFD+distFE)/2);
   Serial.print("\t");
-  Serial.print("L: ");
-  Serial.print(distL);
+  Serial.print("FE: ");
+  Serial.print(distFE);
+  Serial.print("\t\t");
+  Serial.print("TD: ");
+  Serial.print(distTD);
+  Serial.print("\t");
+  Serial.print("C: ");
+  Serial.print((distTD+distTE)/2);
+  Serial.print("TE: ");
+  Serial.print(distTE);
   Serial.print("\t\t");
   Serial.println(direction);
 
@@ -301,18 +315,11 @@ void loop() {
       
   }
     
-    
-  }
   else if (stage==3) {   
     Serial.println("S T O P");
-    digitalWrite(PIN_REDLED, HIGH);
+    //digitalWrite(PIN_REDLED, HIGH);
     //Motors::stop();
   }  
 
-  while(SBORDER_L > branco_treshold && SBORDER_R > branco_treshold){
-       
-    }
-
-  
 
 }

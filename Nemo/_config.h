@@ -1,42 +1,42 @@
 #include <Arduino.h>
 
-//Coloquem aqui os pinos e nomes que vocês usarem
+//motors (left, right)
+#define MOTOR_L 16
+#define MOTOR_R 17
 
-//Motor A
-#define PWMA 9
-#define AIN1 5  
-#define AIN2 4
+//TODO: Definir sensor left, middle, right
+//Distance sensors (left, middle, right)
+#define SDIST_FE 23
+#define SDIST_FD 19
+#define SDIST_TE 18
+#define SDIST_TD 18
 
-//Motor B
-#define PWMB 10
-#define BIN1 7
-#define BIN2 6
+//Border sensors (left, right)
+#define SBORDER_L 34
+#define SBORDER_R 39
 
-#define STBY 8
+//JUDGE CONTROLLER
+#define JCONTROLLER 4
 
-// Motors config (H-Bridge)
-#define MOTOR_ABS_MAX          255
+// TODO: Defenir melhor SCL e SCA
+//SCL, SDA FOR DISTANCE SENSORS
+#define SCL_SDIST 22
+#define SDA_SDIST 21
 
-//Sensor IR
-#define RECV_PIN 2
+//Backup analogs pins
+#define ANALOG_1 25
+#define ANALOG_2 26
+#define ANALOG_3 32
+#define ANALOG_4 33
 
-//Sensores de distância
-#define XSHUT1 A0
-#define XSHUT2 A1
-#define XSHUT3 A2
-#define XSHUT4 A3
+//Variáveis que vão receber os valores lidos dos pinos dos sensores
+int distFE;  //Valor lido pelo sensor da frente esquerda
+int distFD;  //Valor lido pelo sensor da frente direita
+int distTE;  //Valor lido pelo sensor de trás esquerda
+int distTD;  //Valor lido pelo sensor de trás direita
 
-#define SCL A5
-#define SDA A4
+int distMax = 200;  //Distância máxima permitida como referência para os sensores (em milímetros)
 
-//Sensores de borda
-#define borda1 A6  
-#define borda2 A7
-
-//Seletor de estratégia
-#define B1 11
-#define B2 12
-#define B3 13
-
-//LED
-#define LED1 3
+//Variáveis que receberão o valor da velocidades que serão enviadas para os ESC's
+int speedL; //Valor de velocidade para o ESC da esquerda
+int speedR; //Valor de velocidade para o ESC da direita
